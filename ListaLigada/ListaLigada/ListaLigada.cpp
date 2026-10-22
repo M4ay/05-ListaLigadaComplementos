@@ -7,7 +7,10 @@ struct NO {
 	NO* prox;
 };
 
+// Tarefa 1 -----
+// Adicionar o ponteiro "ultimo"
 NO* primeiro = NULL;
+NO* ultimo = NULL;
 
 // headers
 void menu();
@@ -70,7 +73,7 @@ void menu()
 void inicializar()
 {
 	// se a lista já possuir elementos
-// libera a memoria ocupada
+	// libera a memoria ocupada
 	NO* aux = primeiro;
 	while (aux != NULL) {
 		NO* paraExcluir = aux;
@@ -78,7 +81,10 @@ void inicializar()
 		free(paraExcluir);
 	}
 
+	// Tarefa 2 -----
+	// Ao limpar a lista, o ponteiro ultimo também deve ser resetado para NULL.
 	primeiro = NULL;
+	ultimo = NULL;
 	cout << "Lista inicializada \n";
 
 }
@@ -124,29 +130,84 @@ void inserirElemento()
 	cin >> novo->valor;
 	novo->prox = NULL;
 
-	if (primeiro == NULL)
+	// Tarefa 3 -----
+	if (primeiro == NULL) // Se a lista estiver vazia
 	{
+		// O primeiro e o ultimo recebem novo
 		primeiro = novo;
+		ultimo = novo;
 	}
-	else
-	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
+	else // Caso contrário
+	{	
+		ultimo->prox = novo; // ultimo->prox aponta para novo.
+		ultimo = novo; // ultimo é atualizado para novo.
 	}
 }
 
+// Tarefa 4 -----
+// Modifique sua função de exclusão da atividade anterior. 
+// O que acontece com o ponteiro ultimo se o usuário excluir o elemento que está no final da lista? 
+// Você precisará encontrar o penúltimo nó para que ele se torne o novo ultimo.
 void excluirElemento()
 {
+	int valor;
+	cout << "Digite o elemento a ser excluido: ";
+	cin >> valor;
 
+	NO* atual = primeiro;
+	NO* anterior = NULL;
+
+	// Percorre a lista para encontrar o elemento
+	while (atual != NULL && atual->valor != valor)
+	{
+		anterior = atual;
+		atual = atual->prox;
+	}
+
+	if (atual == NULL)
+	{
+		cout << "O elemento nao foi encontrado." << endl;
+		return;
+	}
+
+	if (anterior == NULL)
+	{
+		// Excluindo o primeiro elemento
+		primeiro = atual->prox;
+		if (primeiro == NULL)
+		{
+			ultimo = NULL; // Lista vazia
+		}
+	}
+	else
+	{
+		anterior->prox = atual->prox;
+		if (atual == ultimo)
+		{
+			// O penultimo vira o ultimo
+			ultimo = anterior;
+		}
+	}
+
+	free(atual);
+	cout << "Elemento excluido." << endl;
 }
 
 void buscarElemento()
 {
+	int valor;
+	cout << "Digite o elemento a ser buscado: ";
+	cin >> valor;
 
+	NO* aux = primeiro;
+	while (aux != NULL)
+	{
+		if (aux->valor == valor)
+		{
+			cout << "Elemento encontrado." << endl;
+			return;
+		}
+		aux = aux->prox;
+	}
+	cout << "Elemento nao encontrado." << endl;
 }
-
-
